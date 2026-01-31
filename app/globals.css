@@ -4,29 +4,56 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 160 84% 39%;
-    --border: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --background: 60 9% 98%;
+    --foreground: 24 10% 10%;
+    --primary: 174 58% 39%;
+    --primary-foreground: 0 0% 100%;
+    --muted: 24 6% 90%;
+    --muted-foreground: 25 5% 45%;
+    --border: 24 6% 90%;
+    --ring: 174 58% 39%;
   }
 
   * {
-    @apply border-gray-200;
+    @apply border-stone-200;
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-white text-gray-900 antialiased;
+    @apply bg-surface text-content-primary antialiased;
   }
 }
 
-/* Focus visible for accessibility */
 @layer utilities {
   .focus-ring {
-    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
+    @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white;
   }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+/* Subtle fade-in for content */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.4s ease-out forwards;
 }

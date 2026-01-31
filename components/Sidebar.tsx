@@ -19,8 +19,8 @@ const navItems = [
   { href: "/dashboard/reports", label: "Medical Reports", icon: FileText },
   { href: "/dashboard/appointment", label: "Book Doctor", icon: Calendar },
   { href: "/dashboard/emergency", label: "Emergency", icon: Ambulance },
-  { href: "/dashboard/health-plan", label: "Health Plan", icon: Activity, disabled: true },
   { href: "/dashboard/lab-tests", label: "Lab Tests", icon: FlaskConical },
+  { href: "/dashboard/health-plan", label: "Health Plan", icon: Activity, disabled: true },
 ];
 
 export function Sidebar() {
@@ -28,10 +28,10 @@ export function Sidebar() {
 
   return (
     <aside
-      className="hidden w-64 flex-shrink-0 flex-col border-r border-gray-200 bg-white lg:flex"
+      className="hidden w-64 flex-shrink-0 flex-col border-r border-stone-200 bg-surface-elevated lg:flex"
       aria-label="Dashboard navigation"
     >
-      <nav className="flex flex-1 flex-col gap-1 p-4">
+      <nav className="flex flex-1 flex-col gap-0.5 p-4">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -41,8 +41,8 @@ export function Sidebar() {
             return (
               <div
                 key={item.href}
-                className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-gray-400 cursor-not-allowed"
-                title="Coming soon"
+                className="flex items-center gap-3 rounded-button px-3 py-2.5 text-content-tertiary cursor-not-allowed"
+                title="Coming soon: AI fitness & diet plans"
               >
                 <Icon className="h-5 w-5" aria-hidden />
                 <span className="text-sm font-medium">{item.label}</span>
@@ -55,10 +55,10 @@ export function Sidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                "flex items-center gap-3 rounded-button px-3 py-2.5 text-sm font-medium transition-colors",
                 isActive
-                  ? "bg-primary-50 text-primary-700"
-                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  ? "bg-primary-100 text-primary-700"
+                  : "text-content-secondary hover:bg-surface-muted hover:text-content-primary"
               )}
               aria-current={isActive ? "page" : undefined}
             >

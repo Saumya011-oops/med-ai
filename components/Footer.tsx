@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Stethoscope } from "lucide-react";
+import { Heart } from "lucide-react";
 
 const footerLinks = {
   product: [
@@ -21,33 +21,32 @@ const footerLinks = {
 
 export function Footer() {
   return (
-    <footer className="border-t border-gray-200 bg-gray-50">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand */}
+    <footer className="border-t border-stone-200 bg-surface-muted">
+      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary-600 text-white">
-                <Stethoscope className="h-5 w-5" aria-hidden />
-              </div>
-              <span className="text-lg font-semibold text-gray-900">MedAI</span>
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500 text-white">
+                <Heart className="h-5 w-5" aria-hidden />
+              </span>
+              <span className="text-lg font-bold tracking-tight text-content-primary">
+                MedAI
+              </span>
             </Link>
-            <p className="mt-3 text-sm text-gray-500">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-content-secondary">
               Your AI-powered health assistant — anytime, anywhere.
             </p>
           </div>
-
-          {/* Product */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-700">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
               Product
             </h3>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 space-y-3">
               {footerLinks.product.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-500 hover:text-primary-600"
+                    className="text-sm text-content-secondary transition-colors hover:text-primary-600"
                   >
                     {link.label}
                   </Link>
@@ -55,18 +54,16 @@ export function Footer() {
               ))}
             </ul>
           </div>
-
-          {/* Company */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-700">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
               Company
             </h3>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 space-y-3">
               {footerLinks.company.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-500 hover:text-primary-600"
+                    className="text-sm text-content-secondary transition-colors hover:text-primary-600"
                   >
                     {link.label}
                   </Link>
@@ -74,18 +71,16 @@ export function Footer() {
               ))}
             </ul>
           </div>
-
-          {/* Legal */}
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-700">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-content-tertiary">
               Legal
             </h3>
-            <ul className="mt-4 space-y-2">
+            <ul className="mt-4 space-y-3">
               {footerLinks.legal.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-gray-500 hover:text-primary-600"
+                    className="text-sm text-content-secondary transition-colors hover:text-primary-600"
                   >
                     {link.label}
                   </Link>
@@ -94,8 +89,7 @@ export function Footer() {
             </ul>
           </div>
         </div>
-
-        <div className="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-500">
+        <div className="mt-12 border-t border-stone-200 pt-8 text-center text-sm text-content-tertiary">
           © {new Date().getFullYear()} MedAI. All rights reserved.
         </div>
       </div>

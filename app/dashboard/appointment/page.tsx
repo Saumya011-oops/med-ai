@@ -1,202 +1,169 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import Link from "next/link";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { Calendar, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Search } from "lucide-react";
 import { Select } from "@/components/ui/select";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { DoctorCard } from "@/components/DoctorCard";
-import { MOCK_DOCTORS, MOCK_TIME_SLOTS } from "@/lib/mockData";
-import type { Doctor } from "@/lib/mockData";
+import { Input } from "@/components/ui/input";
+import { DoctorListCard } from "@/components/DoctorListCard";
+import { MOCK_DOCTORS } from "@/lib/mockData";
 
-const appointmentSchema = z.object({
-  date: z.string().min(1, "Select a date"),
-  time: z.string().min(1, "Select a time"),
-  problemDescription: z.string().min(10, "Describe your concern (min 10 chars)"),
-});
-
-type AppointmentFormValues = z.infer<typeof appointmentSchema>;
+const COUNTRIES = ["All countries", "Switzerland", "United States", "India", "United Kingdom"];
+const PER_PAGE = 9;
 
 export default function AppointmentPage() {
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-  const [confirmed, setConfirmed] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+  const [country, setCountry] = useState("All countries");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<AppointmentFormValues>({
-    resolver: zodResolver(appointmentSchema),
-  });
+  const filtered = useMemo(() => {
+    let list = MOCK_DOCTORS.filter((d) => {
+      const matchCountry = country === "All countries" || d.country === country;
+      const q = search.toLowerCase();
+      const matchSearch =
+        !q ||
+        d.name.toLowerCase().includes(q) ||
+        d.specialization.toLowerCase().includes(q) ||
+        d.country.toLowerCase().includes(q);
+      return matchCountry && matchSearch;
+    });
+    return list;
+  }, [country, search]);
 
-  const date = watch("date");
-  const time = watch("time");
-
-  const onSubmit = async (data: AppointmentFormValues) => {
-    if (!selectedDoctor) return;
-    setConfirmed(true);
-    await new Promise((r) => setTimeout(r, 500));
-    setSubmitted(true);
-  };
-
-  // Generate next 7 days for date picker
-  const dateOptions = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date();
-    d.setDate(d.getDate() + i);
-    return d.toISOString().split("T")[0];
-  });
-
-  if (submitted) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="mx-auto max-w-md"
-      >
-        <Card>
-          <CardContent className="pt-6">
-            <div className="rounded-lg bg-green-50 p-6 text-center">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Appointment Request Submitted
-              </h3>
-              <p className="mt-2 text-sm text-gray-600">
-                In production, you would receive a confirmation. Consultation
-                fee: ${selectedDoctor?.fee ?? 0} (mock).
-              </p>
-              <Button
-                className="mt-4"
-                onClick={() => {
-                  setSubmitted(false);
-                  setConfirmed(false);
-                  setSelectedDoctor(null);
-                }}
-                variant="outline"
-              >
-                Book another
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    );
-  }
+  const totalPages = Math.ceil(filtered.length / PER_PAGE) || 1;
+  const paginated = useMemo(
+    () => filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE),
+    [filtered, page]
+  );
 
   return (
-    <div className="mx-auto max-w-4xl space-y-8">
+    <div className="mx-auto max-w-[1440px] space-y-6">
+      {/* Header: back + "Choose Top Doctor" */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
+        className="flex items-center gap-4"
       >
-        <h2 className="text-2xl font-bold text-gray-900">
-          Book Doctor Appointment
-        </h2>
-        <p className="mt-1 text-gray-600">
-          Choose a doctor, date & time, and describe your concern. Minimal
-          consultation fee.
-        </p>
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900"
+        >
+          <ArrowLeft className="h-5 w-5" aria-hidden />
+          Back
+        </Link>
+        <h1 className="text-xl font-bold text-gray-900 lg:text-2xl">
+          Choose Top Doctor
+        </h1>
       </motion.div>
 
-      {/* Doctor selection */}
-      <section>
-        <h3 className="mb-4 text-lg font-semibold text-gray-900">
-          Select a Doctor
-        </h3>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {MOCK_DOCTORS.map((doctor) => (
-            <DoctorCard
-              key={doctor.id}
-              doctor={doctor}
-              selected={selectedDoctor?.id === doctor.id}
-              onSelect={setSelectedDoctor}
-            />
-          ))}
+      {/* Filters: Select Country, Search */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="country" className="sr-only">
+            Select country
+          </label>
+          <Select
+            id="country"
+            value={country}
+            onChange={(e) => {
+              setCountry(e.target.value);
+              setPage(1);
+            }}
+            className="w-full rounded-xl border-gray-300 bg-gray-50"
+          >
+            {COUNTRIES.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </Select>
         </div>
-      </section>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" aria-hidden />
+          <Input
+            type="search"
+            placeholder="Enter specialty, sub-specialty or disease"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            className="pl-10 rounded-xl border-gray-300 bg-gray-50"
+          />
+        </div>
+      </div>
 
-      {/* Date, time, description */}
-      <Card>
-        <CardHeader>
-          <h3 className="text-lg font-semibold">Date, Time & Description</h3>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <Label htmlFor="date" className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" /> Date
-                </Label>
-                <Select id="date" {...register("date")} className="mt-1">
-                  <option value="">Select date</option>
-                  {dateOptions.map((d) => (
-                    <option key={d} value={d}>
-                      {new Date(d).toLocaleDateString("en-US", {
-                        weekday: "short",
-                        month: "short",
-                        day: "numeric",
-                      })}
-                    </option>
-                  ))}
-                </Select>
-                {errors.date && (
-                  <p className="mt-1 text-sm text-red-600">{errors.date.message}</p>
-                )}
-              </div>
-              <div>
-                <Label htmlFor="time" className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" /> Time
-                </Label>
-                <Select id="time" {...register("time")} className="mt-1">
-                  <option value="">Select time</option>
-                  {MOCK_TIME_SLOTS.map((t) => (
-                    <option key={t} value={t}>
-                      {t}
-                    </option>
-                  ))}
-                </Select>
-                {errors.time && (
-                  <p className="mt-1 text-sm text-red-600">{errors.time.message}</p>
-                )}
-              </div>
-            </div>
-            <div>
-              <Label htmlFor="problemDescription">Problem description</Label>
-              <Textarea
-                id="problemDescription"
-                placeholder="Briefly describe your symptoms or concern"
-                rows={3}
-                {...register("problemDescription")}
-                className="mt-1"
-              />
-              {errors.problemDescription && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.problemDescription.message}
-                </p>
-              )}
-            </div>
-            {selectedDoctor && (
-              <p className="text-sm text-gray-600">
-                Consultation fee: <strong>${selectedDoctor.fee}</strong>
-              </p>
-            )}
-            <Button
-              type="submit"
-              disabled={!selectedDoctor || isSubmitting}
-              className="w-full sm:w-auto"
-            >
-              {isSubmitting ? "Confirming..." : "Confirm appointment"}
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+      {/* Doctor grid – equal height cards */}
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {paginated.map((doctor, i) => (
+          <motion.div
+            key={doctor.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.03 }}
+          >
+            <DoctorListCard doctor={doctor} />
+          </motion.div>
+        ))}
+      </div>
+
+      {paginated.length === 0 && (
+        <p className="py-12 text-center text-gray-500">No doctors match your filters.</p>
+      )}
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-2 pt-4">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+            aria-label="Previous page"
+          >
+            ‹
+          </button>
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            const p = i + 1;
+            return (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setPage(p)}
+                className={`flex h-9 min-w-[2.25rem] items-center justify-center rounded-lg px-2 ${
+                  page === p
+                    ? "bg-gray-200 font-semibold text-gray-900"
+                    : "border border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                {p}
+              </button>
+            );
+          })}
+          {totalPages > 5 && (
+            <>
+              <span className="px-2 text-gray-500">…</span>
+              <button
+                type="button"
+                onClick={() => setPage(totalPages)}
+                className="flex h-9 min-w-[2.25rem] items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50"
+              >
+                {totalPages}
+              </button>
+            </>
+          )}
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+            aria-label="Next page"
+          >
+            ›
+          </button>
+        </div>
+      )}
     </div>
   );
 }

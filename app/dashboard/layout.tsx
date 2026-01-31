@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -12,12 +12,15 @@ import {
   Activity,
   FlaskConical,
   User,
+  Settings,
+  HelpCircle,
   LogOut,
+  ChevronDown,
 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "@/components/Sidebar";
 import { getCurrentUser, clearUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -25,8 +28,8 @@ const navItems = [
   { href: "/dashboard/reports", label: "Medical Reports", icon: FileText },
   { href: "/dashboard/appointment", label: "Book Doctor", icon: Calendar },
   { href: "/dashboard/emergency", label: "Emergency", icon: Ambulance },
-  { href: "/dashboard/health-plan", label: "Health Plan", icon: Activity, disabled: true },
   { href: "/dashboard/lab-tests", label: "Lab Tests", icon: FlaskConical },
+  { href: "/dashboard/health-plan", label: "Health Plan", icon: Activity, disabled: true },
 ];
 
 export default function DashboardLayout({
@@ -38,6 +41,8 @@ export default function DashboardLayout({
   const router = useRouter();
   const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null);
   const [mounted, setMounted] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setUser(getCurrentUser());
@@ -50,7 +55,18 @@ export default function DashboardLayout({
     }
   }, [mounted, user, router]);
 
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   const handleLogout = () => {
+    setDropdownOpen(false);
     clearUser();
     setUser(null);
     router.push("/");
@@ -59,8 +75,8 @@ export default function DashboardLayout({
 
   if (!mounted) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary-600 border-t-transparent" />
+      <div className="flex min-h-screen items-center justify-center bg-surface">
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary-500 border-t-transparent" />
       </div>
     );
   }
@@ -69,14 +85,18 @@ export default function DashboardLayout({
     return null;
   }
 
+  const dropdownItems = [
+    { icon: User, label: "My Profile", href: "/dashboard/profile" },
+    { icon: Settings, label: "Settings", href: "/dashboard/settings" },
+    { icon: HelpCircle, label: "Help & Support", href: "/dashboard/help" },
+  ];
+
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 lg:flex-row">
-      {/* Desktop sidebar */}
+    <div className="flex min-h-screen flex-col bg-surface lg:flex-row">
       <Sidebar />
 
-      {/* Mobile bottom nav */}
       <nav
-        className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-gray-200 bg-white px-2 py-2 lg:hidden"
+        className="fixed bottom-0 left-0 right-0 z-40 flex items-center justify-around border-t border-stone-200 bg-surface-elevated px-2 py-2 lg:hidden"
         aria-label="Mobile navigation"
       >
         {navItems
@@ -90,8 +110,8 @@ export default function DashboardLayout({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center gap-1 rounded-lg px-2 py-2 text-xs font-medium transition-colors",
-                  isActive ? "text-primary-600" : "text-gray-500 hover:text-gray-900"
+                  "flex flex-col items-center gap-1 rounded-button px-2 py-2 text-xs font-medium transition-colors",
+                  isActive ? "text-primary-600" : "text-content-tertiary hover:text-content-primary"
                 )}
                 aria-current={isActive ? "page" : undefined}
               >
@@ -102,25 +122,65 @@ export default function DashboardLayout({
           })}
       </nav>
 
-      {/* Main content */}
       <div className="flex flex-1 flex-col lg:ml-0">
-        {/* Top header */}
-        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-gray-200 bg-white px-4 lg:px-8">
-          <h1 className="text-lg font-semibold text-gray-900 lg:text-xl">
-            MedAI Portal
+        {/* Top bar: no username text. Circular avatar only; click opens dropdown. */}
+        <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-stone-200 bg-surface-elevated px-4 lg:px-8">
+          <h1 className="text-lg font-semibold text-content-primary lg:text-xl">
+            MedAI
           </h1>
-          <div className="flex items-center gap-2">
-            <div className="hidden items-center gap-2 rounded-lg bg-gray-100 px-3 py-2 text-sm text-gray-700 sm:flex">
-              <User className="h-4 w-4" aria-hidden />
-              <span>{user.username}</span>
-            </div>
-            <Button variant="ghost" size="sm" onClick={handleLogout} aria-label="Log out">
-              <LogOut className="h-5 w-5" />
-            </Button>
+          <div className="relative" ref={dropdownRef}>
+            <button
+              type="button"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="flex items-center gap-1 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2"
+              aria-expanded={dropdownOpen}
+              aria-haspopup="true"
+              aria-label="Open profile menu"
+            >
+              <div className="relative flex h-9 w-9 items-center justify-center rounded-full border-2 border-primary-400 bg-primary-100 text-primary-700">
+                <User className="h-5 w-5" aria-hidden />
+              </div>
+              <ChevronDown
+                className={cn("h-4 w-4 text-gray-500 transition-transform", dropdownOpen && "rotate-180")}
+                aria-hidden
+              />
+            </button>
+
+            <AnimatePresence>
+              {dropdownOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.15 }}
+                  className="absolute right-0 top-full z-50 mt-2 w-48 rounded-card border border-stone-200 bg-surface-elevated py-1 shadow-cardHover"
+                >
+                  {dropdownItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="flex items-center gap-2 px-4 py-2.5 text-sm text-content-primary hover:bg-surface-muted"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      <item.icon className="h-4 w-4 text-gray-500" aria-hidden />
+                      {item.label}
+                    </Link>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                  >
+                    <LogOut className="h-4 w-4" aria-hidden />
+                    Logout
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </header>
 
-        <main className="flex-1 p-4 pb-24 lg:p-8 lg:pb-8">{children}</main>
+        <main className="flex-1 p-4 pb-24 lg:p-8 lg:pb-8 lg:max-w-6xl lg:mx-auto lg:w-full">{children}</main>
       </div>
     </div>
   );

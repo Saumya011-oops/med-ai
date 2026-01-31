@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { motion } from "framer-motion";
-import { Stethoscope } from "lucide-react";
+import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,10 +23,10 @@ const signupSchema = z
     password: z.string().min(6, "Password must be at least 6 characters"),
     confirmPassword: z.string(),
     agreeTerms: z
-    .boolean()
-    .refine((val) => val === true, {
-      message: "You must agree to the Terms & Conditions",
-    }),
+      .boolean()
+      .refine((val) => val === true, {
+        message: "You must agree to the Terms & Conditions",
+      }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -68,116 +68,123 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-12">
+    <div className="flex min-h-screen flex-col items-center justify-center bg-surface px-4 py-12">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md"
+        transition={{ duration: 0.35 }}
+        className="w-full max-w-[400px]"
       >
-        <Link href="/" className="mb-8 flex items-center justify-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary-600 text-white">
-            <Stethoscope className="h-6 w-6" aria-hidden />
-          </div>
-          <span className="text-xl font-semibold text-gray-900">MedAI</span>
+        <Link
+          href="/"
+          className="mb-10 flex items-center justify-center gap-2.5 transition-opacity hover:opacity-90"
+        >
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500 text-white shadow-soft">
+            <Heart className="h-5 w-5" aria-hidden />
+          </span>
+          <span className="text-xl font-bold tracking-tight text-content-primary">
+            MedAI
+          </span>
         </Link>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Create an account</CardTitle>
+        <Card className="shadow-card">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-xl">Create an account</CardTitle>
             <CardDescription>
               Enter your details to get started with MedAI.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {error && (
-              <div className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+              <div className="rounded-input border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                 {error}
               </div>
             )}
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="username">Username</Label>
                 <Input
                   id="username"
                   placeholder="johndoe"
                   {...register("username")}
-                  className="mt-1"
+                  className="h-11"
                   autoComplete="username"
                 />
                 {errors.username && (
-                  <p className="mt-1 text-sm text-red-600">{errors.username.message}</p>
+                  <p className="text-sm text-red-600">{errors.username.message}</p>
                 )}
               </div>
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="you@example.com"
                   {...register("email")}
-                  className="mt-1"
+                  className="h-11"
                   autoComplete="email"
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                  <p className="text-sm text-red-600">{errors.email.message}</p>
                 )}
               </div>
-              <div>
-                <Label htmlFor="phone">Phone number (optional)</Label>
+              <div className="space-y-2">
+                <Label htmlFor="phone">Phone (optional)</Label>
                 <Input
                   id="phone"
                   type="tel"
                   placeholder="+1 234 567 8900"
                   {...register("phone")}
-                  className="mt-1"
+                  className="h-11"
                   autoComplete="tel"
                 />
               </div>
-              <div>
+              <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
                   placeholder="••••••••"
                   {...register("password")}
-                  className="mt-1"
+                  className="h-11"
                   autoComplete="new-password"
                 />
                 {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                  <p className="text-sm text-red-600">{errors.password.message}</p>
                 )}
               </div>
-              <div>
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm password</Label>
                 <Input
                   id="confirmPassword"
                   type="password"
                   placeholder="••••••••"
                   {...register("confirmPassword")}
-                  className="mt-1"
+                  className="h-11"
                   autoComplete="new-password"
                 />
                 {errors.confirmPassword && (
-                  <p className="mt-1 text-sm text-red-600">
+                  <p className="text-sm text-red-600">
                     {errors.confirmPassword.message}
                   </p>
                 )}
               </div>
-              <div className="flex items-start gap-2">
+              <div className="flex items-start gap-3">
                 <Checkbox
                   id="agreeTerms"
                   checked={agreeTerms}
                   onChange={(e) => setValue("agreeTerms", e.target.checked)}
                   aria-describedby="terms-error"
+                  className="mt-0.5 rounded"
                 />
-                <div className="grid gap-1.5 leading-none">
+                <div className="space-y-1">
                   <Label
                     htmlFor="agreeTerms"
-                    className="text-sm font-normal text-gray-600"
+                    className="text-sm font-normal text-content-secondary"
                   >
                     I agree to the{" "}
-                    <Link href="/terms" className="text-primary-600 hover:underline">
+                    <Link href="/terms" className="font-medium text-primary-600 hover:underline">
                       Terms & Conditions
                     </Link>
                   </Label>
@@ -188,29 +195,31 @@ export default function SignupPage() {
                   )}
                 </div>
               </div>
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Creating account..." : "Sign up"}
+              <Button type="submit" className="h-11 w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Creating account…" : "Sign up"}
               </Button>
             </form>
 
             <div className="relative my-6">
               <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-gray-200" />
+                <span className="w-full border-t border-stone-200" />
               </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-white px-2 text-gray-500">Or continue with</span>
+              <div className="relative flex justify-center text-xs uppercase tracking-wider">
+                <span className="bg-surface-elevated px-2 text-content-tertiary">
+                  Or continue with
+                </span>
               </div>
             </div>
             <Button type="button" variant="outline" className="w-full" disabled>
-              Google (UI only)
+              Google (coming soon)
             </Button>
           </CardContent>
         </Card>
 
-        <p className="mt-6 text-center text-sm text-gray-600">
+        <p className="mt-8 text-center text-sm text-content-secondary">
           Already have an account?{" "}
-          <Link href="/auth/login" className="font-medium text-primary-600 hover:underline">
-            Login
+          <Link href="/auth/login" className="font-semibold text-primary-600 hover:underline">
+            Log in
           </Link>
         </p>
       </motion.div>
