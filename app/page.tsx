@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import {
   MessageCircle,
   FileText,
@@ -12,38 +13,47 @@ import {
   CheckCircle2,
   ArrowRight,
   Sparkles,
+  Clock,
+  Globe,
+  Heart,
+  Brain,
+  FlaskConical,
 } from "lucide-react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { getCurrentUser } from "@/lib/auth";
 
 const whatIsMedAI = [
   {
     icon: MessageCircle,
-    title: "AI Doctor consultation",
-    description: "Chat with an AI assistant for initial guidance and symptom discussion.",
+    title: "AI Doctor Consultation",
+    description: "Get instant, 24/7 AI-powered health guidance. Describe your symptoms and receive preliminary insights before consulting with certified doctors. Our AI assistant helps you understand your health concerns and guides you on next steps.",
   },
   {
     icon: FileText,
-    title: "Medical report analysis",
-    description: "Upload reports and get AI-powered summaries and observations.",
+    title: "Medical Report Analysis",
+    description: "Upload your medical reports, lab results, or imaging scans and receive comprehensive AI-powered analysis. Get detailed summaries, key observations, and suggested next steps to help you understand your health data better.",
   },
   {
     icon: Stethoscope,
-    title: "Physical doctor consultation",
-    description: "Book certified doctors globally at minimal cost.",
+    title: "Certified Doctor Consultations",
+    description: "Connect with verified, certified doctors from around the world. Book video or in-person consultations at affordable rates. Access specialists in cardiology, dermatology, pediatrics, oncology, and more.",
   },
   {
     icon: Ambulance,
-    title: "Emergency & lab services",
-    description: "Request ambulance and book at-home lab tests.",
+    title: "Inter-City Patient Transport",
+    description: "Book ambulance services for safe, professional patient transport between cities. Perfect for medical transfers, hospital discharges, or scheduled medical appointments requiring specialized transport.",
   },
-];
-
-const howItWorks = [
-  { step: 1, title: "Ask AI Doctor", desc: "Describe symptoms and get initial guidance." },
-  { step: 2, title: "Upload reports", desc: "Share medical reports for AI analysis." },
-  { step: 3, title: "Consult certified doctors", desc: "Book a video or in-person consultation." },
-  { step: 4, title: "Get treatment & guidance", desc: "Receive prescriptions and follow-up care." },
+  {
+    icon: FlaskConical,
+    title: "At-Home Lab Tests",
+    description: "Schedule lab tests from the comfort of your home. Our certified technicians visit your location to collect samples, making healthcare more convenient and accessible.",
+  },
+  {
+    icon: Brain,
+    title: "Personalized Health Plans",
+    description: "Receive AI-generated fitness and diet plans tailored to your health profile, medical history, and wellness goals. Coming soon with advanced personalization features.",
+  },
 ];
 
 const whyMedAI = [
@@ -73,6 +83,14 @@ const item = {
 };
 
 export default function HomePage() {
+  const [user, setUser] = useState<ReturnType<typeof getCurrentUser>>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setUser(getCurrentUser());
+    setMounted(true);
+  }, []);
+
   return (
     <div className="flex min-h-screen flex-col bg-surface">
       <Navbar />
@@ -109,30 +127,48 @@ export default function HomePage() {
               Chat with an AI doctor, analyze medical reports, and consult certified
               doctors globally at minimal cost — all in one place.
             </motion.p>
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.24 }}
-              className="mt-10 flex flex-wrap items-center justify-center gap-4"
-            >
-              <Link
-                href="/auth/signup"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-button bg-primary-500 px-8 text-base font-semibold text-white shadow-card transition-all hover:bg-primary-600 hover:shadow-cardHover active:scale-[0.98]"
+            {mounted && !user && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.24 }}
+                className="mt-10 flex flex-wrap items-center justify-center gap-4"
               >
-                Get started free
-                <ArrowRight className="h-5 w-5" aria-hidden />
-              </Link>
-              <Link
-                href="/auth/login"
-                className="inline-flex h-12 items-center justify-center rounded-button border border-stone-300 bg-surface-elevated px-8 text-base font-medium text-content-primary transition-colors hover:bg-surface-muted"
+                <Link
+                  href="/auth/signup"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-button bg-primary-500 px-8 text-base font-semibold text-white shadow-card transition-all hover:bg-primary-600 hover:shadow-cardHover active:scale-[0.98]"
+                >
+                  Get started free
+                  <ArrowRight className="h-5 w-5" aria-hidden />
+                </Link>
+                <Link
+                  href="/auth/login"
+                  className="inline-flex h-12 items-center justify-center rounded-button border border-stone-300 bg-surface-elevated px-8 text-base font-medium text-content-primary transition-colors hover:bg-surface-muted"
+                >
+                  Log in
+                </Link>
+              </motion.div>
+            )}
+            {mounted && user && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.24 }}
+                className="mt-10"
               >
-                Log in
-              </Link>
-            </motion.div>
+                <Link
+                  href="/dashboard"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-button bg-primary-500 px-8 text-base font-semibold text-white shadow-card transition-all hover:bg-primary-600 hover:shadow-cardHover active:scale-[0.98]"
+                >
+                  Go to Dashboard
+                  <ArrowRight className="h-5 w-5" aria-hidden />
+                </Link>
+              </motion.div>
+            )}
           </div>
         </section>
 
-        {/* What is MedAI – cards with hover and clear spacing */}
+        {/* What is MedAI – expanded cards with more details */}
         <section className="border-t border-stone-200 bg-surface-elevated px-4 py-20 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <motion.div
@@ -144,8 +180,8 @@ export default function HomePage() {
               <h2 className="text-2xl font-bold tracking-tight text-content-primary sm:text-3xl">
                 What is MedAI
               </h2>
-              <p className="mx-auto mt-4 max-w-xl text-content-secondary">
-                One platform for AI-powered guidance and certified doctor consultations.
+              <p className="mx-auto mt-4 max-w-2xl text-content-secondary">
+                MedAI is your comprehensive healthcare platform that combines the power of artificial intelligence with access to certified medical professionals. Whether you need instant health guidance, detailed report analysis, or professional medical consultations, MedAI provides a seamless, affordable, and accessible healthcare experience.
               </p>
             </motion.div>
             <motion.div
@@ -153,7 +189,7 @@ export default function HomePage() {
               initial="hidden"
               whileInView="show"
               viewport={{ once: true }}
-              className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+              className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             >
               {whatIsMedAI.map((block, i) => (
                 <motion.div
@@ -170,45 +206,6 @@ export default function HomePage() {
                   <p className="mt-2 text-sm leading-relaxed text-content-secondary">
                     {block.description}
                   </p>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
-        {/* How It Works – numbered steps, clean */}
-        <section className="border-t border-stone-200 bg-surface px-4 py-20 sm:py-24">
-          <div className="mx-auto max-w-6xl">
-            <motion.div
-              initial={{ opacity: 0, y: 12 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center"
-            >
-              <h2 className="text-2xl font-bold tracking-tight text-content-primary sm:text-3xl">
-                How it works
-              </h2>
-            </motion.div>
-            <motion.div
-              variants={container}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              className="mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4"
-            >
-              {howItWorks.map((step, i) => (
-                <motion.div
-                  key={step.step}
-                  variants={item}
-                  className="relative text-center"
-                >
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary-500 text-lg font-bold text-white shadow-soft">
-                    {step.step}
-                  </span>
-                  <h3 className="mt-4 font-semibold text-content-primary">
-                    {step.title}
-                  </h3>
-                  <p className="mt-2 text-sm text-content-secondary">{step.desc}</p>
                 </motion.div>
               ))}
             </motion.div>
@@ -265,30 +262,32 @@ export default function HomePage() {
         </section>
 
         {/* Final CTA */}
-        <section className="border-t border-stone-200 bg-surface px-4 py-20 sm:py-24">
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mx-auto max-w-2xl rounded-card border border-stone-200 bg-surface-elevated p-10 text-center shadow-card sm:p-12"
-          >
-            <h2 className="text-2xl font-bold tracking-tight text-content-primary sm:text-3xl">
-              Ready to take control of your health?
-            </h2>
-            <p className="mt-4 text-content-secondary">
-              Join MedAI for AI-powered guidance and access to certified doctors worldwide.
-            </p>
-            <div className="mt-8">
-              <Link
-                href="/auth/signup"
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-button bg-primary-500 px-8 text-base font-semibold text-white shadow-card transition-all hover:bg-primary-600 hover:shadow-cardHover active:scale-[0.98]"
-              >
-                Get started free
-                <ArrowRight className="h-5 w-5" aria-hidden />
-              </Link>
-            </div>
-          </motion.div>
-        </section>
+        {mounted && !user && (
+          <section className="border-t border-stone-200 bg-surface px-4 py-20 sm:py-24">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="mx-auto max-w-2xl rounded-card border border-stone-200 bg-surface-elevated p-10 text-center shadow-card sm:p-12"
+            >
+              <h2 className="text-2xl font-bold tracking-tight text-content-primary sm:text-3xl">
+                Ready to take control of your health?
+              </h2>
+              <p className="mt-4 text-content-secondary">
+                Join MedAI for AI-powered guidance and access to certified doctors worldwide.
+              </p>
+              <div className="mt-8">
+                <Link
+                  href="/auth/signup"
+                  className="inline-flex h-12 items-center justify-center gap-2 rounded-button bg-primary-500 px-8 text-base font-semibold text-white shadow-card transition-all hover:bg-primary-600 hover:shadow-cardHover active:scale-[0.98]"
+                >
+                  Get started free
+                  <ArrowRight className="h-5 w-5" aria-hidden />
+                </Link>
+              </div>
+            </motion.div>
+          </section>
+        )}
       </main>
 
       <Footer />

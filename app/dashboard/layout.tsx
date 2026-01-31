@@ -16,6 +16,7 @@ import {
   HelpCircle,
   LogOut,
   ChevronDown,
+  Home,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sidebar } from "@/components/Sidebar";
@@ -23,6 +24,7 @@ import { getCurrentUser, clearUser } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 
 const navItems = [
+  { href: "/", label: "Home", icon: Home },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/chat", label: "AI Doctor", icon: MessageCircle },
   { href: "/dashboard/reports", label: "Medical Reports", icon: FileText },

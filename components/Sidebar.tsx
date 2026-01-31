@@ -10,10 +10,12 @@ import {
   Ambulance,
   Activity,
   FlaskConical,
+  Home,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
+  { href: "/", label: "Home", icon: Home },
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/dashboard/chat", label: "AI Doctor", icon: MessageCircle },
   { href: "/dashboard/reports", label: "Medical Reports", icon: FileText },

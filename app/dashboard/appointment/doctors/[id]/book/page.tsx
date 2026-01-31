@@ -15,6 +15,7 @@ import { Select } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
 import { getDoctorProfile } from "@/lib/mockData";
 import { MOCK_TIME_SLOTS } from "@/lib/mockData";
+import { saveAppointment } from "@/lib/appointments";
 
 const schema = z.object({
   date: z.string().min(1, "Select a date"),
@@ -57,6 +58,21 @@ export default function BookAppointmentPage() {
 
   const onSubmit = async (data: FormValues) => {
     await new Promise((r) => setTimeout(r, 800));
+    
+    // Save appointment
+    if (profile) {
+      saveAppointment({
+        doctorId: id,
+        doctorName: profile.name,
+        specialization: profile.specialization,
+        date: data.date,
+        time: data.time,
+        issue: data.issue,
+        status: "pending",
+        fee: profile.fee,
+      });
+    }
+    
     setSubmitted(true);
   };
 

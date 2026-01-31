@@ -16,6 +16,7 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { AppointmentCalendar } from "@/components/AppointmentCalendar";
 
 /** Card order (strict): 1 Chat, 2 Scan Medical Reports, 3 Book Doctor, 4 Emergency, 5 Lab Tests, 6 Personalized Healthcare Plan (Coming Soon LAST). */
 const modules = [
@@ -42,8 +43,8 @@ const modules = [
   },
   {
     href: "/dashboard/emergency",
-    title: "Emergency Ambulance",
-    description: "Request nearest ambulance. For real emergencies, call local services.",
+    title: "Inter-City Patient Transport",
+    description: "Book ambulance services for safe patient transport between cities.",
     icon: Ambulance,
     color: "bg-red-100 text-red-700",
   },
@@ -81,6 +82,8 @@ export default function DashboardPage() {
           Choose a service below to get started.
         </p>
       </motion.div>
+
+      <AppointmentCalendar />
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {modules.map((module, i) => {

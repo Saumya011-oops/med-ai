@@ -10,13 +10,12 @@ export default function EmergencyPage() {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h2 className="text-2xl font-bold text-gray-900">
-          Emergency Ambulance
+        <h2 className="text-2xl font-bold text-content-primary">
+          Book Inter-City Patient Transport
         </h2>
-        <p className="mt-1 text-gray-600">
-          Enter patient details. In production we would detect your location
-          and dispatch the nearest ambulance. For real emergencies, call local
-          emergency services (e.g. 911) immediately.
+        <p className="mt-1 text-content-secondary">
+          Book ambulance services for safe, professional patient transport between cities. 
+          Perfect for medical transfers, hospital discharges, or scheduled medical appointments requiring specialized transport.
         </p>
       </motion.div>
       <EmergencyForm />

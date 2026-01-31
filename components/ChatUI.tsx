@@ -66,7 +66,7 @@ export function ChatUI() {
   };
 
   return (
-    <div className="flex h-full min-h-0 flex-col rounded-card border border-stone-200 bg-surface-elevated shadow-card">
+    <div className="flex h-full min-h-0 max-h-full flex-col rounded-card border border-stone-200 bg-surface-elevated shadow-card overflow-hidden">
       {/* Marquee disclaimer – sticky at top of chat area */}
       <div className="sticky top-0 z-10 shrink-0 overflow-hidden border-b border-amber-200 bg-amber-50/90 py-2">
         <div className="flex w-max animate-marquee items-center gap-2 text-sm font-medium text-amber-800">
