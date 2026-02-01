@@ -8,7 +8,7 @@ A modern frontend for **MedAI**: AI doctor chat, medical report analysis, certif
 - **Styling:** Tailwind CSS
 - **UI:** Custom components (Button, Card, Input, etc.) + Lucide icons
 - **Forms:** React Hook Form + Zod
-- **Animations:** Framer Motion
+- **Animations :** Framer Motion
 - **Auth:** Mock (localStorage)
 
 ## Getting Started
