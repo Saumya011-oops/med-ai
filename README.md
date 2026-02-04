@@ -1,65 +1,70 @@
-# MedAI – AI-Powered Health Assistant
+# 🏥 MedAI — AI-Powered Medical Assistant Platform
 
-A modern frontend for **MedAI**: AI doctor chat, medical report analysis, certified doctor bookings, emergency ambulance, and lab tests. Built with Next.js (App Router), TypeScript, Tailwind CSS, and shadcn-style UI.
+MedAI is an **AI-driven healthcare assistance platform** designed to help users **analyze medical reports, consult an AI doctor through conversation, manage health-related services, and make informed medical decisions** — all from a single, unified interface.
 
-## Tech Stack
+The project combines **Artificial Intelligence, modern web technologies, and healthcare-focused UX** to deliver a **secure, scalable, and user-friendly digital health solution**.
 
-- **Framework:** Next.js 14 (App Router) + TypeScript
-- **Styling:** Tailwind CSS
-- **UI:** Custom components (Button, Card, Input, etc.) + Lucide icons
-- **Forms:** React Hook Form + Zod
-- **Animations :** Framer Motion
-- **Auth:** Mock (localStorage)
+---
 
-## Getting Started
+## 🚀 Project Motivation
 
-```bash
-npm install
-npm run dev
-```
+Access to timely and reliable medical guidance is often limited due to:
+- Shortage of medical professionals
+- High consultation costs
+- Delayed diagnosis
+- Difficulty in understanding complex medical reports
 
-Open [http://localhost:3000](http://localhost:3000).
+MedAI aims to **bridge the gap between patients and medical intelligence** by providing:
+- Instant AI-based medical guidance
+- Simplified medical report analysis
+- A centralized digital healthcare assistant
 
-## Routes
+---
 
-| Route | Description |
-|-------|-------------|
-| `/` | Home (hero, What is MedAI, How It Works, Why MedAI, Trust, Footer) |
-| `/auth/login` | Login (email/password, Google UI, Forgot password link) |
-| `/auth/signup` | Signup (username, email, phone, password, terms checkbox) |
-| `/dashboard` | Dashboard with module cards |
-| `/dashboard/chat` | AI Doctor chat (mock responses) |
-| `/dashboard/reports` | Upload & analyze medical reports (mock) |
-| `/dashboard/appointment` | Book doctor (date, time, doctor selection) |
-| `/dashboard/emergency` | Emergency ambulance form (mock) |
-| `/dashboard/health-plan` | Coming Soon |
-| `/dashboard/lab-tests` | Book lab test at home (mock) |
-| `/terms`, `/privacy`, `/about`, `/contact` | Placeholder pages |
+## 🎯 Project Objectives
 
-## Project Structure
+- Provide an **AI Doctor** for preliminary medical consultation
+- Analyze **medical reports** and explain them in simple language
+- Offer a **secure and user-friendly dashboard** for health management
+- Improve healthcare accessibility using AI
+- Maintain medical-grade UX, accessibility, and data security
 
-```
-/app          – App Router pages (home, auth, dashboard)
-/components   – Navbar, Sidebar, Footer, ChatUI, UploadCard, DoctorCard, EmergencyForm, ui/*
-/lib          – auth.ts (mock), mockData.ts, utils.ts
-/styles       – (reserved)
-```
+---
 
-## Mock Data
+## 🧠 Key Features
 
-- **Auth:** User stored in `localStorage` after login/signup. No real backend.
-- **Doctors, lab tests, time slots:** See `lib/mockData.ts`.
-- **AI chat:** Fixed mock responses in `MOCK_AI_RESPONSES`.
-- **Report analysis:** Fixed mock summary/observations/steps in `MOCK_REPORT_ANALYSIS`.
+### 🤖 AI Doctor (Core Feature)
+- Conversational AI-based medical assistant
+- Question–Answer driven consultation
+- Symptom analysis and guidance
+- Clear, structured, and understandable responses
+- Designed for **preliminary guidance**, not final diagnosis
 
-## Build & Deploy
+---
 
-```bash
-npm run build
-npm start
-```
+### 📄 Medical Report Analysis
+- Upload medical reports (PDF / images)
+- AI-powered extraction and interpretation
+- Simplified explanations of medical terms
+- Highlighting abnormal values and potential concerns
 
-Ready for static/Node deployment (e.g. Vercel).
+---
 
+### 📊 User Dashboard
+- Centralized health overview
+- Easy navigation of medical features
+- Clean and decluttered UI
+- Responsive across all devices
 
-Test commit from Saumya
+---
+
+### 🧪 Lab Tests & Appointments (Planned)
+- Book lab tests
+- Doctor appointment scheduling
+- Emergency service access
+- Health plan recommendations
+
+---
+
+## 🏗️ System Architecture
+
